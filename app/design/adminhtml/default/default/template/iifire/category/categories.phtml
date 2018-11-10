@@ -1,0 +1,201 @@
+<form action="<?php echo $this->getCategoriesSaveUrl(); ?>" method="post" id="category_edit_form">
+<div id="category-edit-container">
+	<?php if($category = $this->getCategory()): ?>
+	<div class="content-header">
+        <h3 class="icon-head head-categories"><?php  echo $category->getName();?> (ID: <?php echo $category->getId(); ?>)</h3>
+        <div class="content-buttons-placeholder" style="width: 0px; height: 14px;"><p class="content-buttons form-buttons" style="">                            
+        	<button style="" onclick="iifireCategorySubmit('<?php echo $this->getSaveUrl(); ?>', true)" class="scalable save" type="button" id="id_008424b0a33735e6aa2104d576f2e71e"><span>Save Setting</span></button></p></div>
+	</div>
+	<?php endif; ?>
+	<div class="entry-edit">
+	    <div class="entry-edit-head">
+	        <h4 class="icon-head head-edit-form fieldset-legend"><?php echo Mage::helper('catalog')->__('Pw Categories Manager') ?></h4>
+	    </div>
+	    <div class="type_switcher_container">
+	    	<p class="switcher">
+	    		<label for="type_switcher">Choose Type</label>
+	    		<select name="type_switcher" id="type_categoy" <?php if($this->getCategory()): ?>onchange="updateContent('<?php echo $this->getReloadUrl(); ?>')"<?php endif; ?>>
+	    			<?php $options = Mage::helper('icategory')->getTypeOptions(); ?>
+	    			<?php foreach ($options as $key => $value): ?>
+	    			<option  value="<?php echo $key; ?>" <?php if ($key==$this->getCategoryType()): ?> selected <?php endif; ?>><?php echo $value; ?></option>
+	    			<?php endforeach; ?>
+	    		</select>
+	    	</p>
+	    </div>
+	    <fieldset id="grop_fields">
+	    	<input type="hidden" name="category_id" id="category_id" value="<?php if ($this->getCategory()): echo $this->getCategory()->getId(); endif;?>" />
+	        <input type="hidden" name="category_ids" id="product_categories" value="<?php echo $this->getIdsString() ?>">
+	        <div id="product-categories" class="tree">
+	        	<?php if (!$this->getCategory()): ?>
+	        	<p><?php echo $this->__('Please select a category first'); ?></p>
+	        	<?php endif; ?>
+	        </div>
+	    </fieldset>
+	</div>
+	
+	<?php if ($this->getCategory()): ?>
+	<script type="text/javascript">
+		
+	</script>
+	<?php if($this->getRootNode() && $this->getRootNode()->hasChildren()): ?>
+	<script type="text/javascript">
+	
+	Ext.EventManager.onDocumentReady(function() {
+	    var categoryLoader = new Ext.tree.TreeLoader({
+	       dataUrl: '<?php echo $this->getLoadTreeUrl()?>'
+	    });
+	
+	    categoryLoader.createNode = function(config) {
+	        config.uiProvider = Ext.tree.CheckboxNodeUI;
+	        var node;
+	        if (config.children && !config.children.length) {
+	            delete(config.children);
+	            node = new Ext.tree.AsyncTreeNode(config);
+	
+	        } else {
+	            node = new Ext.tree.TreeNode(config);
+	        }
+	        return node;
+	    };
+	
+	    categoryLoader.on("beforeload", function(treeLoader, node) {
+	        treeLoader.baseParams.category = node.attributes.id;
+	    });
+	
+	    categoryLoader.on("load", function(treeLoader, node, config) {
+	        varienWindowOnload();
+	    });
+	
+	    var tree = new Ext.tree.TreePanel('product-categories', {
+	        animate:true,
+	        loader: categoryLoader,
+	        enableDD:false,
+	        containerScroll: true,
+	        rootUIProvider: Ext.tree.CheckboxNodeUI,
+	        selModel: new Ext.tree.CheckNodeMultiSelectionModel(),
+	        rootVisible: '<?php echo $this->getRootNode()->getIsVisible() ?>'
+	    });
+	
+	    tree.on('check', function(node) {
+	        if(node.attributes.checked) {
+	            categoryAdd(node.id);
+	        } else {
+	            categoryRemove(node.id);
+	        }
+	        varienElementMethods.setHasChanges(node.getUI().checkbox);
+	    }, tree);
+	
+	    // set the root node
+	    var root = new Ext.tree.TreeNode({
+	        text: '<?php echo $this->jsQuoteEscape($this->getRootNode()->getName()) ?>',
+	        draggable:false,
+	        checked:'<?php echo $this->getRootNode()->getChecked() ?>',
+	        id:'<?php echo $this->getRootNode()->getId() ?>',
+	        disabled: <?php echo ($this->getRootNode()->getDisabled() ? 'true' : 'false') ?>,
+	        uiProvider: Ext.tree.CheckboxNodeUI
+	    });
+	
+	    tree.setRootNode(root);
+	    bildCategoryTree(root, <?php echo $this->getTreeJson() ?>);
+	    tree.addListener('click', categoryClick.createDelegate(this));
+	
+	    // render the tree
+	    tree.render();
+	    //root.expand();
+	    tree.expandAll();
+	});
+	
+	function bildCategoryTree(parent, config){
+	    if (!config) return null;
+	
+	    if (parent && config && config.length){
+	        for (var i = 0; i < config.length; i++){
+	            config[i].uiProvider = Ext.tree.CheckboxNodeUI;
+	            var node;
+	            var _node = Object.clone(config[i]);
+	            if (_node.children && !_node.children.length) {
+	                delete(_node.children);
+	                node = new Ext.tree.AsyncTreeNode(_node);
+	
+	            } else {
+	                node = new Ext.tree.TreeNode(config[i]);
+	            }
+	            parent.appendChild(node);
+	            node.loader = node.getOwnerTree().loader;
+	            if(config[i].children){
+	                bildCategoryTree(node, config[i].children);
+	            }
+	        }
+	    }
+	}
+	
+	function categoryClick(node, e){
+	    if (node.disabled) {
+	        return;
+	    }
+	    node.getUI().check(!node.getUI().checked());
+	    varienElementMethods.setHasChanges(Event.element(e), e);
+	};
+	function categoryAdd(id) {
+	    var ids = $('product_categories').value.split(',');
+	    ids.push(id);
+	    $('product_categories').value = ids.join(',');
+	}
+	function categoryRemove(id) {
+	    var ids = $('product_categories').value.split(',');
+	    // bug #7654 fixed
+	    while (-1 != ids.indexOf(id)) {
+	        ids.splice(ids.indexOf(id), 1);
+	    }
+	    $('product_categories').value = ids.join(',');
+	}
+	</script>
+	<?php endif; ?>
+	<?php endif; ?>
+</div>
+
+
+
+</form>
+<script type="text/javascript">
+var iifireCategoryForm = new varienForm('category_edit_form');
+function iifireCategorySubmit(url,useAjax)
+{
+    var params = {};
+    var categoryContainer = $('category-edit-container');
+    var thisObj = this;
+    //alert(url);
+    <?php if(!Mage::app()->isSingleStoreMode()): ?>
+    var storeId = $('store_switcher').value;
+    <?php else: ?>
+    var storeId = <?php echo Mage::app()->getStore(true)->getId(); ?>
+    <?php endif; ?>
+    
+    new Ajax.Request(url, {
+    	parameters:{"store_id":storeId,"id":$('category_id').value,"category_ids":$('product_categories').value,"category_id":$('category_id').value,"type_switcher":$('type_categoy').value},
+    	evalScripts: true,  
+    	onComplete: function () {
+            setTimeout(function() {
+                try {
+                    //alert("<?php echo $this->__('Request timeout! Please refresh and try again.'); ?>");
+                } catch (e) {
+                    alert(e.message);
+                };
+            }, 25);
+        },
+        onSuccess: function(transport) {
+            try {
+                if (transport.responseText) {
+                	var baseUrl = '<?php echo $this->getEditUrl() ?>';
+                	//alert(storeId)
+        			var urlExt = (storeId?'store/'+storeId+'/':'')+'id/'+$('category_id').value+'/';
+        			var url = parseSidUrl(baseUrl, urlExt);	
+                    updateContent(url);
+                }
+            } catch (e) {
+                alert(e.message);
+            }
+        }
+    })  
+}
+</script>

@@ -1,0 +1,107 @@
+<?php 	$helper = Mage::helper("customerpartner");
+		$customerid = Mage::getSingleton("customer/session")->getId(); ?>
+<div class="wk_row">
+	<div class="wk_label">
+		<label><?php echo $helper->__("Image") ?> :</label>
+		<span class="wk_no_star"></span>
+	</div>
+	<div class="wk_field">
+		<label for="wk_image" id="wk_image_label">
+			<i></i>
+			<span><?php echo $helper->__("Add images") ?>...</span>
+		</label>
+		<input id="wk_image" type="file" name="images[]" accept="image/*" style="display:none;" multiple="multiple"/>
+		<input id="wk_image_hidden" type="hidden" name="wk_image_hidden" value="">
+		<div class="progress progress-striped active" style="display:none;">
+			<div id="image_bar" class="bar" style="width:0%;"></div>
+		</div>
+		<table id="cp_media_gallery" class="data border" width="100%" cellspacing="0" style="display:none;">
+			<thead>
+				<tr id="wk_cp_tr_heading">
+					<th><?php echo $helper->__("Image") ?></th>
+					<th><?php echo $helper->__("Base Image") ?></th>
+					<th><?php echo $helper->__("Small Image") ?></th>
+					<th><?php echo $helper->__("Thumbnail") ?></th>
+					<th><?php echo $helper->__("Action") ?></th>
+				</tr>
+			</thead>
+			<tbody class="cp_tbody_image">
+			</tbody>
+		</table>
+	</div>
+</div>	
+<script>
+jQuery("#cp_media_gallery").delegate(".wk_cp_add_images","mouseenter",function(){
+	if(((jQuery(this).position().left)+410) > jQuery(window).width())
+		jQuery("body").append("<div id='wk_cp_zoom_img' style='right:"+(jQuery(window).width()-(jQuery(this).position().left))+"px;top:"+((jQuery(this).position().top)-170)+"px;'><img src='"+jQuery(this).attr("src")+"' style='height:300px;width:300px;'/></div>");
+	else
+		jQuery("body").append("<div id='wk_cp_zoom_img' style='left:"+((jQuery(this).position().left)+70)+"px;top:"+((jQuery(this).position().top)-170)+"px;'><img src='"+jQuery(this).attr("src")+"' style='height:300px;width:300px;'/></div>");
+});
+jQuery("#cp_media_gallery").delegate(".wk_cp_add_images","mouseout",function(){
+	jQuery("body").find("#wk_cp_zoom_img").remove();
+});
+
+jQuery("#wk_image").change(function(e) { 
+	var ext = jQuery(this).val().split(".").pop().toLowerCase();
+	if(true != ["jpg","jpeg","png","gif"] && jQuery.inArray(ext,["jpg","jpeg","png","gif"]) != -1)    {
+		var file = this.files;
+		var xhr = new XMLHttpRequest();
+		if(xhr.upload) {
+			xhr.upload.onprogress = function(e) {
+				var done = e.position || e.loaded, total = e.totalSize || e.total;
+				var percentage = Math.floor(done/total*1000)/10;
+				jQuery("#image_bar").css({"width":percentage+"%"});
+			};
+		}
+		xhr.open("POST","<?php echo $this->getUrl('customerpartner/customeraccount/fileupload');?>", true);
+		xhr.send(file);
+	}
+});
+
+jQuery("#wk_image").ajaxfileupload({
+	"action" 	: "<?php echo $this->getUrl('customerpartner/customeraccount/fileupload');?>",
+	"onStart" 	: function(){jQuery("#image_bar").css({"width":"0%","animation":"2s linear 0s normal none infinite progress-bar-stripes"}).parent().show();
+	},
+	"onComplete": function(response){
+					jQuery("#image_bar").css({"width":"100%","animation":"none"});
+					if(typeof response.message != "undefined")
+						alert(response.message);
+					else{
+						jQuery("#wk_image_hidden").val(response);
+						var img=jQuery("#wk_image_hidden").val();
+						var split_img=img.split(",");
+						for(i=0; i < split_img.length-1; i++){
+							jQuery("#wk_image_label").append("<input type='hidden' value='"+split_img[i]+"' name='image_upload[]' />");
+							jQuery(".cp_tbody_image").append("<tr class='preview'><td><img id='"+split_img[i]+"' class='wk_cp_add_images' src='<?php echo Mage::getBaseUrl('media').'customerpartner/customerproduct/'.$customerid.'/image/'; ?>"+split_img[i]+"' width='60px' height=50px'/></td><td><input type='radio' name='baseimage' value='"+split_img[i]+"' /></td><td><input type='radio' name='smallimage' value='"+split_img[i]+"'></td><td><input type='radio' name='thumbnailimage' value='"+split_img[i]+"'></td><td><img src='<?php echo $this->getSkinUrl("customerpartner/images/delete.gif"); ?>' class='wk_delegate_cp_delete' title='<?php $helper->__("Delete"); ?>'/></td></tr>");
+						}
+						jQuery("#cp_media_gallery").show();
+						jQuery("#wk_image").val("");
+						file_uploaded = 1;
+					}
+				  },
+	"valid_extensions" : ["jpg","jpeg","png","gif"],
+});
+
+jQuery("#cp_media_gallery").delegate(".wk_delegate_cp_delete","click",function(){
+	var dicisionapp = confirm("<?php echo $helper->__('Sure Want To Delete Image'); ?>");
+	var this_this = jQuery(this);
+	if(dicisionapp == true){
+		this_this.parents(".preview").find(".wk_cp_add_images");
+		this_this.attr("src","<?php echo $this->getJsUrl("extjs/resources/images/default/grid/loading.gif"); ?>");
+		var this_image = this_this.parents(".preview").find(".wk_cp_add_images");
+		jQuery.ajax({
+			url: "<?php echo $this->getUrl('customerpartner/customeraccount/deleteimagedelegate');?>",
+			type: "POST",
+			data: {file:this_image.attr("id")},
+			dataType: "html",
+			success:function(){
+				jQuery("#wk_image_label").find("input").each(function(){
+					if(jQuery(this).val() == this_image.attr("id"))
+						jQuery(this).remove();
+				});
+				this_this.parents(".preview").remove();
+			}
+		});
+	}
+});
+</script>

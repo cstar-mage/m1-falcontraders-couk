@@ -1,0 +1,3 @@
+<FilesMatch "\.(xml|phtml)$">
+Require all denied
+</FilesMatch>

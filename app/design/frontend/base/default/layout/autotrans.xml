@@ -1,0 +1,28 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">
+
+<default>
+
+	<reference name="head">   
+      <block type="autotrans/index"  template="autotrans/meta.phtml"   />  	 
+    </reference>   
+
+	
+	<reference name="store_language">
+            <action method="setTemplate">
+                <template>autotrans/index.phtml</template>
+            </action>
+        </reference>
+	
+</default>
+   
+  <autotrans_index_index>   
+    <reference name="root">   
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">   
+      <block type="autotrans/index" name="autotrans_index" template="autotrans/index.phtml"/>   
+    </reference>   
+  </autotrans_index_index>   
+</layout>   
+	

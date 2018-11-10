@@ -1,0 +1,32 @@
+<?php
+    $_product = $this->getProduct();
+    $_helper = $this->helper('catalog/output');
+
+    if (count($this->getGalleryImages()) > 1) {
+    	$imageWidths[] = 265;
+    	$imageWidths[] = 131;
+    	$imageWidths[] = 131;
+    } else if (count($this->getGalleryImages()) > 0) {
+    	$imageWidths[] = 198;
+    	$imageWidths[] = 198;	 	
+    } else {
+    	$imageWidths[] = 299;	    	
+    }
+
+    $i = 0;
+?>
+<ul class="ac-product-images" style="height:<?php echo $imageWidths[0]; ?>px">
+	<li class="ac-image<?php echo ($i+1); ?><?php if (count($this->getGalleryImages()) == 0): ?> ac-main<?php endif; ?>">
+	    <?php
+	        $_img = '<img src="'.$this->helper('catalog/image')->init($_product, 'image')->resize($imageWidths[0]).'" alt="'.$this->escapeHtml($this->getImageLabel()).'" title="'.$this->escapeHtml($this->getImageLabel()).'" />';
+	        echo $_helper->productAttribute($_product, $_img, 'image');
+	    ?>
+	</li>
+	<?php if (count($this->getGalleryImages()) > 0): ?>
+	    <?php foreach ($this->getGalleryImages() as $_image): $i++; if ($i>2) { break; } ?>
+			<li class="ac-image<?php echo ($i+1); ?>">
+	        	<img src="<?php echo $this->helper('catalog/image')->init($this->getProduct(), 'thumbnail', $_image->getFile())->resize($imageWidths[$i]); ?>" width="<?php echo $imageWidths[$i]; ?>" height="<?php echo $imageWidths[$i]; ?>" alt="<?php echo $this->escapeHtml($_image->getLabel()) ?>" />
+			</li>
+	    <?php endforeach; ?>
+	<?php endif; ?>
+</ul>

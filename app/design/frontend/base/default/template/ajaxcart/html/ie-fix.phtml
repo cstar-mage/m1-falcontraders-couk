@@ -1,0 +1,85 @@
+<?php if ($this->helper('ajaxcart')->isEnabled()): ?>	
+<!--[if lt IE 10]>
+<style>
+	.ui-draggable.round { 
+		-webkit-transform: scale(1);
+		-moz-transform: scale(1);
+		-o-transform: scale(1);
+		-ms-transform: scale(1);
+		transform: scale(1);
+	}
+
+	/* FLOATERS */
+	.ac-floater { background: <?php echo Mage::getStoreConfig('ajaxcart/dragdrop/floater_bkg'); ?>; display:none; }
+	.ac-floater.ac-floater-top { top:-100% !important; display:block; }
+	.ac-floater.ac-floater-left { left:-100% !important; display:block; }
+	.ac-floater.ac-floater-right { left:130% !important; display:block; }
+</style>
+<![endif]-->
+
+<!--[if lt IE 9]>
+<style>
+	<?php if(Mage::getStoreConfig('ajaxcart/popup_configuration/enable_notification_popup_wrapper_bkg')): ?>
+	/* POPUP CONTAINER */
+	#ac-popup-wrapper-bkg { 		
+		background:transparent;
+	    filter:progid:DXImageTransform.Microsoft.gradient(startColorStr=#99<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/popup_configuration/notification_popup_wrapper_bkg')); ?>,endColorStr=#99<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/popup_configuration/notification_popup_wrapper_bkg')); ?>);
+	    -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#99<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/popup_configuration/notification_popup_wrapper_bkg')); ?>,endColorstr=#99<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/popup_configuration/notification_popup_wrapper_bkg')); ?>)";
+	}	
+	<?php endif; ?>
+	.popup-container .popup-content .ac-page-title { overflow:visible; float:none; }
+	
+	/* DRAG AND DROP */
+	.ui-draggable .draggable-bkg { 		
+		background:transparent;
+	    filter:progid:DXImageTransform.Microsoft.gradient(startColorStr=#CC<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/dragdrop/dragme_text_bkg')); ?>,endColorStr=#CC<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/dragdrop/dragme_text_bkg')); ?>);
+	    -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/dragdrop/dragme_text_bkg')); ?>,endColorstr=#CC<?php echo str_replace('#','',Mage::getStoreConfig('ajaxcart/dragdrop/dragme_text_bkg')); ?>)";
+		display: none;
+		left: 0;
+	}	
+		
+	.ui-draggable .draggable-bkg .draggable-content { 
+		position: relative;
+		margin: 0 auto;
+		top:50%;
+		margin-top: -40px;
+	}
+	
+	.ui-draggable .draggable-bkg .draggable-content .draggable-text { font-style: normal; line-height: normal; } 
+	
+	/* IE LOADER */
+	#ajaxcart-loading-popup-container .popup-content { 
+		width: 40px; 
+		height: 40px; 
+	}
+	
+	.ie-loader-bkg { 
+		background:url(<?php echo $this->getSkinUrl('ajaxcart/images/ie-loader-bkg.png'); ?>) center top no-repeat; 
+		width: 32px; 
+		height: 32px; 
+		padding: 4px; 
+	}
+
+	/* LIST ITEMS */
+	#ajaxcart-custom-block .ajaxcart-products-grid li.item .actions .ajaxcart-qty { float:right; margin:0 5px 0 0; }
+	#ajaxcart-custom-block .ajaxcart-products-grid li.item .actions button.button { float:left; }
+</style>
+<script type="text/javascript">
+	/* ADD IE LOADER */
+	jQueryAC(document).ready(function() {
+		jQueryAC('#ajaxcart-loading-popup-content').html('<div class="ie-loader-bkg"><img src="<?php echo $this->getSkinUrl('ajaxcart/images/ie-loader.gif'); ?>" /></div>');
+	});
+</script>
+<![endif]-->
+
+<!--[if lt IE 8]>
+<style>
+	#ajaxcart-custom-block .ajaxcart-products-grid li.item .actions .ajaxcart-qty { margin:0; }
+	#ajaxcart-custom-block .ajaxcart-products-grid li.item .actions .add-to-links { clear:both; }
+	.ac-product-list .ajaxcart-qty { position:absolute; }
+	.ac-floater .draggable-content { position:relative; }
+	.wishlist-index-index .ajaxcart-qty { margin-right:5px; }
+</style>
+  <script src="<?php echo $this->getJsUrl('ajaxcart/livicons/json2.min.js'); ?>"></script>
+<![endif]-->
+<?php endif; ?>

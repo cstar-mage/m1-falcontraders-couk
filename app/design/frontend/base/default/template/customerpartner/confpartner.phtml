@@ -1,0 +1,29 @@
+ <script type="text/javascript">
+	if (typeof jQuery == 'undefined'){
+		document.write(unescape("%3Cscript src='//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));
+	}
+ </script>
+<div class="field" id="wantptr">
+	<label for="want_to_partner" class="required"><em>*</em><?php echo Mage::helper("customerpartner")->__('Want to be Partner with us') ?></label>
+	<div class="input-box">
+		<select name="wanttopartner" class="required-entry">
+            <option value=""><?php echo Mage::helper("customerpartner")->__('Select') ?></option>
+            <option value="1"><?php echo Mage::helper("customerpartner")->__('Yes') ?></option>
+            <option value="0"><?php echo Mage::helper("customerpartner")->__('No') ?></option>
+        </select>
+	</div>
+</div>
+<script>
+var $wk_jq= jQuery.noConflict();
+(function($wk_jq){
+	$wk_jq(function(){
+		var parent_li = $wk_jq('#email_address').parents('li');
+		var parent_li_html = parent_li.html();
+		parent_li.html('');
+		parent_li.append($wk_jq('<div/>').addClass('field').html(parent_li_html));
+		parent_li.addClass('fields');
+		$wk_jq('#email_address').parents('.field').after($wk_jq('#wantptr'));
+		$wk_jq('#wantptr').show();
+	});
+})($wk_jq);
+</script>

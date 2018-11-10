@@ -1,0 +1,273 @@
+<?php 	$partner = Mage::getModel("customerpartner/user")->isPartner();
+		$customerid = Mage::getSingleton("customer/session")->getCustomerId();
+		$helper = Mage::helper("customerpartner");
+		if($partner["wantpartner"] == 1)	{	?>
+			<script src="<?php echo $this->getSkinUrl("customerpartner/js/nicEdit-latest.js"); ?>" type="text/javascript"></script>
+			<script src="<?php echo $this->getSkinUrl("customerpartner/js/ajaxfileupload.js"); ?>" type="text/javascript"></script>
+			<div>
+				<form action="<?php echo $this->getUrl("customerpartner/customeraccount/newproduct") ?>" enctype="multipart/form-data" method="POSt" id="new_form">
+					<input type="hidden" name="type_id" value="simple"/>
+					<input type="hidden" name="store_id" value="<?php echo Mage::app()->getStore()->getStoreId(); ?>"/>
+					<input type="hidden" name="website_id" value="<?php echo Mage::app()->getWebsite()->getId(); ?>"/>
+					<h4 class="wk_cp_product_main_heading"><?php echo $helper->__("Add New Product") ?></h4>
+					<div id="wk_bodymain">
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Product Category") ?>:</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field wk_category">
+								<div class="wk_for_validation">
+	 								<div id="wk_category_label"><?php echo $helper->__("CATEGORIES") ?></div>
+<?php								$Mar_lef = 0;$count = 0;
+									$category_helper = Mage::helper("catalog/category");
+									$category_model = Mage::getModel("catalog/category");
+									$_categories = $category_helper->getStoreCategories();
+									$total = count($_categories);
+									if($total > 0)	{
+										foreach($_categories as $_category)	{
+											$count++;
+											$result_tree = "<div class='wk_cat_container'><span onClick='findsubcat(this)' class='";
+											if(count($category_model->getResource()->getAllChildren($category_model->load($_category['entity_id'])))-1 > 0){
+												if($count < $total)
+													$result_tree .= "wk_plus'></span><span class='wk_foldersign'></span>";
+												else
+													$result_tree .= "wk_plusend'></span><span class='wk_foldersign'></span>";
+											}
+											else
+												$result_tree .="wk_no'></span><span class='wk_foldersign'></span>";
+											$result_tree .="<span class='wk_elements wk_cat_name'>".$_category->getName()."</span>";
+											$result_tree .="<input class='wk_elements' type='checkbox' name='category[]' value='".$_category['entity_id']."'></div>";
+											echo $result_tree;
+										}
+									}					?>
+								</div>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Product Name")?> :</label> 
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width" name="name" id="name"/>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Description") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<textarea name="description" class="required-entry" id="description" rows="5" cols="75" ></textarea>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Short description") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<textarea name="short_description" id="short_description" rows="5" cols="75" class="required-entry"></textarea>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("SKU") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" name="sku" id="sku" class="required-entry wk_input_width" value=""/>
+								<div id="skuavail">
+									<span class="success-msg"><?php echo $helper->__("SKU Available") ?></span>
+								</div>
+								<div id="skunotavail" style="margin-top: 3px;">
+									<span class="error-msg"><?php echo $helper->__("SKU Already Exist") ?></span>
+								</div>
+							</div>
+						</div> 
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Price") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width validate-zero-or-greater" name="price"/>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Stock") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width validate-digits" name="stock"/>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Weight") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width validate-number validate-zero-or-greater validate-number-range number-range-0-99999999.9999" name="weight"/>
+							</div>
+						</div>
+					</div>
+					<?php echo $this->getChildHtml(); ?>
+					<div class="wk_cp_save_product_button">
+						<p class="wk_back_link">
+							<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__("Back") ?></a>
+						</p>
+						<center>
+							<button type="submit" id="save_butn" class="wk_button">
+								<span><?php echo $helper->__("Save") ?></span>
+							</button>
+							<button type="reset" class="wk_button">
+								<span><?php echo $helper->__("Cancel") ?></span>
+							</button>
+						</center>
+					</div>
+				</form>
+			</div>
+			<script type="text/javascript">
+				var new_form = new VarienForm("new_form", true);
+				function findsubcat(thisthis){
+					var thisthis = jQuery(thisthis);		
+					if(thisthis.attr("class") == "wk_plus" || thisthis.attr("class") == "wk_plusend"){
+						thisthis.attr("onclick","");
+						thisthis.prepend("<span class='wk_node_loader'></span>")
+						jQuery.ajax({
+							url  : "<?php echo $this->getUrl('customerpartner/customeraccount/categorytree/');?>",
+							type : "POST",
+							data : {	CID:thisthis.siblings("input").val(),
+									ML:thisthis.parent("div").css("margin-left").replace("px","")},
+							dataType: "html",
+							success:function(content){
+								thisthis.attr("onclick","findsubcat(this)");
+								thisthis.find(".wk_node_loader").remove();
+								if(thisthis.attr("class") == "wk_plus")
+									thisthis.attr("class","wk_minus");
+								if(thisthis.attr("class") == "wk_plusend")
+									thisthis.attr("class","wk_minusend");
+								thisthis.parent("div").after(content);
+								thisthis.parent("div").nextAll().slideDown(300);
+							}
+						});
+					}
+					if(thisthis.attr("class") == "wk_minus" || thisthis.attr("class") == "wk_minusend"){
+						if(thisthis.attr("class") == "wk_minus")
+							thisthis.attr("class","wk_plus");
+						if(thisthis.attr("class") == "wk_minusend")
+							thisthis.attr("class","wk_plusend");
+						var thiscategory = thisthis.parent("div");
+						while(thiscategory.next().hasClass("wk_removable")){
+							thiscategory.next().slideUp("slow",function(){jQuery(this).remove();});
+							thiscategory = thiscategory.next();
+						}
+					}
+				}
+
+				jQuery("#sku").change(function(){
+					var this_this = jQuery(this);
+					var length = this_this.val().length;
+					jQuery("#skuavail,#skunotavail").hide();
+					if(this_this.val() != ""){
+						jQuery.ajax({
+							url  : "<?php echo Mage::getUrl('customerpartner/customeraccount/verifysku');?>",
+							type : "POST",
+							data : {sku:this_this.val()},
+							dataType: "html",
+							success:function(data){
+								data = JSON.parse(data);
+								if(data.availability == 1){
+									jQuery("#skuavail").show();
+									jQuery("#skunotavail").hide();
+								}
+								else{
+									jQuery("#skunotavail").show();
+									jQuery("#skuavail").hide();
+									this_this.val("");
+								}
+							}
+						});
+					}
+				});
+
+				bkLib.onDomLoaded(function() {
+			        new nicEditor({fullPanel : true}).panelInstance("description");
+			        new nicEditor({fullPanel : true}).panelInstance("short_description");
+			  	});
+
+				jQuery("#save_butn").click(function(){
+					var category_checked = false;
+					var extra_fields_validation = true;
+					jQuery(".wk_category").find("input").each(function(){
+						if(jQuery(this).prop("checked") == true)
+							category_checked = true;
+					});
+					jQuery("#description,#short_description").siblings(".nicEdit-wk_nice_textarea").find("div").removeClass("validation-failed");
+					jQuery("#description,#short_description").siblings(".nicEdit-wk_nice_textarea").next(".validation-advice").remove();
+					jQuery(".wk_for_validation").removeClass("validation-failed");
+					jQuery(".wk_for_validation").next(".validation-advice").remove();
+					if(jQuery("#description").prev().find("div").text() == ""){
+						jQuery("#description").prev().find("div").addClass("validation-failed");
+						jQuery("#description").prev().after("<div class='validation-advice'><?php echo $helper->__('This is a required field.'); ?></div>");
+						extra_fields_validation = false;
+					}
+					if(jQuery("#short_description").prev().find("div").text() == ""){
+						jQuery("#short_description").prev().find("div").addClass("validation-failed");
+						jQuery("#short_description").prev().after("<div class='validation-advice'><?php echo $helper->__('This is a required field.'); ?></div>");
+						extra_fields_validation = false;
+					}
+					if(category_checked == false){
+						jQuery(".wk_for_validation").addClass("validation-failed");
+						jQuery(".wk_for_validation").after("<div class='validation-advice'><?php echo $helper->__('This is a required field.'); ?></div>");
+						extra_fields_validation = false;
+					}
+					if(new_form.validator.validate() != false && extra_fields_validation != false)
+						jQuery("#save_butn").hide().after("<button disabled class='wk_button'><span><?php echo $helper->__('Saving'); ?>...</span></button>");
+					else
+						return false;
+				});
+			</script>
+<script type="text/javascript">
+    if( jQuery('#sku').val() == ""){
+		
+	
+		
+		function genratesku(){
+			finalskustring = <?php echo substr(number_format(time() * rand(),0,'',''),0,10); ?>;			    
+				if(checksku(finalskustring))
+			        jQuery('#sku').val(finalskustring);
+			    else 	
+			      genratesku();	     
+		}
+             
+        function checksku(skuval){
+			var reslt='';
+			jQuery.ajax({
+							url  : "<?php echo Mage::getUrl('customerpartner/customeraccount/verifysku');?>",
+							type : "POST",
+							data : {sku:skuval},
+							dataType: "html",
+							async: false,
+							success:function(data){
+								data = JSON.parse(data);								 
+								if(data.availability == 1){
+									  reslt= '1';
+								  }else {reslt= '0'};
+							}
+						});				  
+				return reslt;
+			}
+			
+	   genratesku();        
+    }
+</script>
+			
+<?php 	}
+		else{
+			Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getBaseUrl()."customer/account/edit/");
+		    Mage::getSingleton("core/session")->addNotice($helper->__("To add product please request for become partner with us"));
+		}

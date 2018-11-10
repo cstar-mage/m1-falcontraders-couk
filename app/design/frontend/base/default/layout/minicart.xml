@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--/**
+ * Magento
+ *
+ * Mini Cart Header
+ * Author: Hire Magento
+ * Website: www.hiremagento.com 
+ * Suport Email: hiremagento@gmail.com
+ *
+**/-->
+<layout version="0.1.0">
+  <default>
+  <reference name="head">
+			<action method="addItem"><type>skin_js</type><name>js/hm/minicart.js</name><params/></action>
+			<action method="addCss"><stylesheet>css/hm/minicart.css</stylesheet></action>
+  </reference>
+  <reference name="header">
+            <reference name="top.links">
+                <remove name="checkout_cart_link"/>
+                <block type="minicart/view" name="minicart_toplink" template="minicart/toplink.phtml" >
+                    <block type="checkout/cart_sidebar" name="cart_sidebar" as="topcart" template="checkout/cart/sidebar.phtml"/>
+                </block>
+                <action method="addLinkBlock"><blockName>minicart_toplink</blockName></action>
+                <block type="checkout/links" name="checkout_cart_link_minicart">
+                    <action method="addCheckoutLink"></action>
+                </block>
+            </reference>
+        </reference>
+  </default>
+</layout>

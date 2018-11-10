@@ -1,0 +1,100 @@
+<?php 	$partner = Mage::getModel("customerpartner/user")->isPartner(); 
+		$helper = Mage::helper("customerpartner");
+		if($partner["wantpartner"] == 1)	{	?>
+			<div class="wk_cp_productbackground">
+				<h4 class="wk_cp_product_main_heading"><?php echo $helper->__("Product List") ?></h4>
+<?php 			echo $this->getPagerHtml(); 			?>
+				<table id="my-orders-table" class="data-table">
+				    <colgroup>
+				    	<col width="1">
+					    <col width="1">
+					    <col width="1">
+					    <col width="1">
+					    <col width="1">
+					    <col width="1">
+					    <col width="1">
+					    <col width="1">
+					    <col width="1">
+				    </colgroup>
+				    <thead>
+				        <tr class="first last odd">
+				            <th><?php echo $helper->__("Product Name")?></th>
+				            <th><?php echo $helper->__("Image")?></th>
+				            <th><?php echo $helper->__("Price")?></th>
+				            <th><?php echo $helper->__("Status")?></th>
+				            <th title="<?php echo $helper->__('Quantity of product from orders that are not in pending state'); ?>"><?php echo $helper->__("Qty.Conf")?></th>
+				            <th title="<?php echo $helper->__('Quantity of product from orders that are in pending state'); ?>"><?php echo $helper->__("Qty.Pend")?></th>
+				            <th title="<?php echo $helper->__('Quantity of product from orders that are in completed state'); ?>"><?php echo $helper->__("Qty.Sold")?></th>
+				            <th><?php echo $helper->__("Amt.Earned")?></th>
+				            <th><?php echo $helper->__("Action")?></th>
+				        </tr>
+				    </thead>
+				    <thead>
+				        <tr class="first last odd">
+				            <th><input id="storesearch" type="text" name="name" class="input-text" placeholder="Search by Name"/></th>
+				            <th colspan="8"></th>
+				    </thead>
+					<tbody>
+<?php 					$count = 1;$total = count($this->getCollection());
+						if($total==0){ ?>
+							<tr class="first last odd">
+								<th class="a-center" colspan="9"><?php echo $helper->__("No Product has been added yet."); ?></th>
+							</tr>
+<?php 					}else{
+							foreach($this->getCollection() as $products)	{  
+								$pro = Mage::getModel("catalog/product")->load($products->getId());
+								$productMediaConfig = Mage::getModel("catalog/product_media_config");
+								$salesdetail = Mage::getModel("customerpartner/saleslist")->getSalesdetail($products->getEntityId());	?>
+	                        <tr class="<?php if($count == 1) echo "first ";if($count % 2 == 0) echo "even ";else echo "odd ";if($count == $total) echo "last ";?>">
+	                        	<td title="<?php echo $products->getName();?>"><?php echo $productname = strlen($products->getName())>10?substr($products->getName(),0,10)."..":$products->getName(); ?></td>
+<?php                 	    if($products->getStatus() == 2) 	{		?> 			
+								<td colspan="7" style="text-align:center;"><?php echo $helper->__("Pending")?></td>
+<?php 						}
+							else 	{		?>
+					            <td><img src="<?php echo $productMediaConfig->getMediaUrl($pro->getImage());?>" class="wk_cp_image"/></td>
+					            <td><?php echo Mage::app()->getStore()->formatPrice($products->getPrice())?></td>
+					            <td><?php echo $helper->__("Approved")?></td>
+					            <td><?php echo $salesdetail["quantitysoldconfirmed"]; ?></td>
+					            <td><?php echo $salesdetail["quantitysoldpending"];	?></td>
+					            <td><?php echo $salesdetail["quantitysold"]; ?></td>
+					            <td><?php echo $salesdetail["amountearned"]; ?></td>
+<?php 						}	?>
+								<td class="a-center last">
+	                				<a style="text-decoration:none;" href="<?php echo $this->getUrl('customerpartner/customeraccount/editproduct/',array('id' => $products->getEntityId())); ?>">
+	                					<img src="<?php echo $this->getSkinUrl("customerpartner/images/edit.gif"); ?>" class="wk_cp_edit" title="<?php echo $helper->__('Edit'); ?>"/>
+	                				</a>
+	                				<a style="text-decoration:none;" onclick="return confirm('<?php echo $helper->__('Are you sure you want to delete ?');?>')" href="<?php echo $this->getUrl('customerpartner/customeraccount/delete/',array('id' => $products->getEntityId())); ?>">
+										<img src="<?php echo $this->getSkinUrl("customerpartner/images/delete.gif"); ?>" class="wk_cp_delete" title="<?php echo $helper->__('Delete'); ?>"/>
+									</a>
+					            </td>
+					        </tr>
+<?php 					$count++;
+						}	
+					}	 		?>
+					</tbody>
+				</table>
+<?php 			echo $this->getPagerHtml();		?>
+				<p class="wk_back_link">
+					<a href="javascript:;" onclick="javascript: window.history.back();" class="left"><<
+						<?php echo $helper->__("Back") ?>
+					</a>
+				</p>
+			</div>
+<?php 	}
+		else{
+			Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getBaseUrl()."customer/account/edit/");
+		    Mage::getSingleton("core/session")->addNotice($helper->__("To add product please request for become partner with us"));
+		}
+?>
+<script type="text/javascript">
+	(function($wk_jq){
+		$wk_jq(function(){
+			$wk_jq('#storesearch').keyup(function(e){
+			    if(e.keyCode == 13)
+			    {
+			        window.location.replace("<?php echo Mage::getUrl('customerpartner/customeraccount/productslist/');?>"+'?search='+$wk_jq('#storesearch').val());
+			    }
+			});
+		});
+	})(jQuery); 
+</script>

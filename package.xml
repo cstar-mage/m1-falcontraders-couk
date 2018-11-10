@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package>
+    <name>Uscoding_GenerateSku</name>
+    <version>0.0.1</version>
+    <stability>stable</stability>
+    <license uri="http://opensource.org/licenses/osl-3.0.php">Uscoding License</license>
+    <channel>community</channel>
+    <extends/>
+    <summary>Generate Automatically SKU</summary>
+    <description>Generate Automatically SKU</description>
+    <notes>Stable version</notes>
+    <authors><author><name>Uscoding Inc</name><user>uscoding</user><email>uscoding@gmail.com</email></author></authors>
+    <date>2014-10-23</date>
+    <time>16:40:38</time>
+    <contents><target name="magelocal"><dir name="Uscoding"><dir name="Xautosku"><dir name="Block"><dir name="Adminhtml"><dir name="Catalog"><dir name="Product"><file name="Edit.php" hash="28af53444185dbe255bc86653036d114"/></dir></dir></dir></dir><dir name="Helper"><file name="Data.php" hash="eb624cb975c639bcbb4d12ca682d1a86"/></dir><dir name="Model"><file name="Observer.php" hash="02bd5af168aa9867a08024e1403d02ed"/><dir name="System"><dir name="Config"><file name="Skutype.php" hash="132588bf4451436ced7b7fb199be45b7"/></dir></dir></dir><dir name="etc"><file name="adminhtml.xml" hash="94dbed28f8f47fcb8281c16e320c2157"/><file name="config.xml" hash="3666aab56ea850aed55062b226d2d219"/><file name="system.xml" hash="f69b0986f0e84daa2c5fa38dd3fc3f7e"/></dir><dir name="sql"><dir name="xautosku_setup"><file name="mysql4-install-0.0.1.php" hash="13e0e4a98d557900e784b4186ec8071d"/></dir></dir></dir></dir></target><target name="magedesign"><dir name="adminhtml"><dir name="default"><dir name="default"><dir name="template"><dir name="Xautosku"><dir name="catalog"><dir name="product"><file name="edit.phtml" hash="15a13047aa12f11f8f3eb2ed3cc150e0"/></dir></dir></dir></dir></dir></dir></dir></target><target name="mageetc"><dir name="modules"><file name="Uscoding_Xautosku.xml" hash="18ed088d2248e0cf0f1e7eeef2819f67"/></dir></target></contents>
+    <compatible/>
+    <dependencies><required><php><min>5.2.0</min><max>6.0.0</max></php></required></dependencies>
+</package>

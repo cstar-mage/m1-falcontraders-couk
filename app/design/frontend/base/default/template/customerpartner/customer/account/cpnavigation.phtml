@@ -1,0 +1,50 @@
+<?php 
+		$partner = Mage::getModel("customerpartner/user")->isPartner();
+		$helper = Mage::helper("customerpartner");
+		if($partner["wantpartner"] == 1)	{
+			$currentUrl = Mage::helper("core/url")->getCurrentUrl(); ?>
+			<div class="block block-account">
+				<div class="block-title">
+					<strong>
+						<span><?php echo $helper->__("Customer Partner") ?></span>
+					</strong>
+				</div>
+				<div class="block-content">
+					<ul class="wk_cont_ul">
+						<li <?php echo strpos($currentUrl,"newproduct") ? "class=current" : ""; ?>>
+<?php 						if(strpos($currentUrl,"newproduct")) 	{ 	?>
+								<strong><?php echo $helper->__("Add New Product") ?></strong>
+<?php 						}
+							else 	{ 	?>
+								<a href="<?php echo $this->getUrl("customerpartner/customeraccount/newproduct"); ?>"><?php echo $helper->__("Add New Product") ?></a>
+<?php 						} 	?>
+						</li>
+						<li <?php echo strpos($currentUrl,"productslist") ? "class=current" : ""; ?>>
+<?php 						if(strpos($currentUrl,"productslist")) 	{ 	?>
+								<strong><?php echo $helper->__("Products List") ?></strong>
+<?php 						}
+							else 	{  	?>
+								<a href="<?php echo $this->getUrl("customerpartner/customeraccount/productslist"); ?>"><?php echo $helper->__("Products List") ?></a>
+<?php 						} 	?>					
+						</li>
+						<li  <?php echo strpos($currentUrl,"dashboard") ? "class=current" : ""; ?>>
+<?php 						if(strpos($currentUrl,"dashboard")) 	{ 	?>
+								<strong><?php echo $helper->__("Dashboard") ?></strong>
+<?php 						}
+							else 	{ 	?>
+								<a href="<?php echo $this->getUrl("customerpartner/customeraccount/dashboard"); ?>"><?php echo $helper->__("Dashboard") ?></a>
+<?php 						} 	?>	
+						</li>
+						<?php echo $this->getChildHtml();?>
+						<li class="last <?php echo strpos($currentUrl,"orderhistory") ? "current" : ""; ?>">
+<?php 						if(strpos($currentUrl,"orderhistory"))	{ 	?>
+								<strong><?php echo $helper->__("Order History") ?></strong>
+<?php 						}
+							else 	{ 	?>
+								<a href="<?php echo $this->getUrl("customerpartner/customeraccount/orderhistory"); ?>"><?php echo $helper->__("Order History") ?></a>
+<?php 						} 		?>
+						</li>
+					</ul>
+				</div>
+			</div>
+<?php 	} 	?>

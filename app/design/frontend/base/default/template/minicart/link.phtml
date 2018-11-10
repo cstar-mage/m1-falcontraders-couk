@@ -1,0 +1,19 @@
+<?php 
+/**
+ * Magento
+ *
+ * Mini Cart Header
+ * Author: Hire Magento
+ * Website: www.hiremagento.com 
+ * Suport Email: hiremagento@gmail.com
+ *
+**/
+?>
+<div id="minicart">
+  <div id="minicart-link">
+    <?php printf('<a href="%s">%s: %s</a>', $this->getUrl('checkout/cart'), $this->__('My Cart'), $this->helper('checkout')->formatPrice(Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal())) ?>
+  </div>
+  <div id="minicart-panel" style="display:none;">
+    <?php echo $this->getChildHtml('topcart'); ?>
+  </div>
+</div>

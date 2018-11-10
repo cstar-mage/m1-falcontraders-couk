@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<config>
+    <tabs>
+        <dd translate="label" module="ajaxcart">
+            <label>Developers-Inc</label>
+            <sort_order>200</sort_order>
+        </dd>
+    </tabs>
+    <sections>
+        <ajaxcart translate="label" module="ajaxcart">
+            <label>AJAX Cart with Drag &amp; Drop</label>
+            <tab>dd</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>10</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>        
+                <activation translate="label">
+                    <label>Activate Free Trial</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <email translate="label">
+                            <label>Your Email</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>license/adminhtml_system_config_form_text</frontend_model>
+                            <backend_model>trial/system_config_backend_email</backend_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <required>1</required>
+                            <comment>As soon as you start your free trial we will contact you to make sure everything is running properly on your store.</comment>
+                        </email>    
+                        <domains translate="label">
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>trial/adminhtml_system_config_form_activate</frontend_model>
+                            <backend_model>trial/system_config_backend_trial</backend_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </domains>                          
+                    </fields>
+                </activation>
+                <contact translate="label">
+                    <label>Thank you for trying out our Ajax Cart extension!</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>5</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <email translate="label">
+                            <label>Your Email</label>
+                            <frontend_type>text</frontend_type>
+                            <frontend_model>trial/adminhtml_system_config_form_contactemail</frontend_model>
+                            <sort_order>0</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </email>                        
+                    </fields>
+                </contact>
+            </groups>
+        </ajaxcart>
+    </sections>
+</config>

@@ -1,0 +1,303 @@
+<?php	$partner = Mage::getModel("customerpartner/user")->isPartner();		
+		$helper = Mage::helper("customerpartner");
+		if($partner["wantpartner"] == 1)	{
+			$pro_id = $this->getRequest()->getParam("id");
+			$product = $this->getProduct();
+			$Stock = Mage::getModel("cataloginventory/stock_item")->loadByProduct($pro_id)->getQty();
+			$customerid = Mage::getSingleton("customer/session")->getCustomerId();
+			$rightpartner = Mage::getModel("customerpartner/user")->isRightPartner($this->getRequest()->getParam("id"));
+			if($rightpartner)	{		?>
+				<script src="<?php echo $this->getSkinUrl('customerpartner/js/nicEdit-latest.js'); ?>" type="text/javascript"></script>
+				<script src="<?php echo $this->getSkinUrl("customerpartner/js/ajaxfileupload.js"); ?>" type="text/javascript"></script>
+				<form action="<?php echo $this->getUrl("customerpartner/customeraccount/editproduct") ?>" enctype="multipart/form-data" method="post" id="edit_form">
+					<input type="hidden" name="productid" value="<?php echo $pro_id; ?>"/>
+					<input type="hidden" name="category_edited" id="wk_cp_cat_edited" value="0"/>
+					<h4 class="wk_cp_product_main_heading"><?php echo $helper->__("Edit Product") ?></h4>
+					<div id="wk_bodymain">
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Product Category") ?>:</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field wk_category">
+								<div class="wk_for_validation">
+	 								<div id="wk_category_label"><?php echo $helper->__("CATEGORIES") ?></div>
+<?php								$Mar_lef = 0;$count = 0;$categories = $product->getCategoryIds();
+									$category_helper = Mage::helper("catalog/category");
+									$category_model = Mage::getModel("catalog/category");
+									$_categories = $category_helper->getStoreCategories();
+									$total = count($_categories);
+									if($total > 0)	{
+										foreach($_categories as $_category)	{
+											$count++;
+											$result_tree = "<div class='wk_cat_container'><span onClick='findsubcat(this)' class='";
+											if(count($category_model->getResource()->getAllChildren($category_model->load($_category['entity_id'])))-1 > 0){
+												if($count < $total)
+													$result_tree .= "wk_plus'></span><span class='wk_foldersign'></span>";
+												else
+													$result_tree .= "wk_plusend'></span><span class='wk_foldersign'></span>";
+											}
+											else
+												$result_tree .="wk_no'></span><span class='wk_foldersign'></span>";
+											$result_tree .="<span class='wk_elements wk_cat_name'>".$_category->getName()."</span>";
+											if(in_array($_category["entity_id"],$categories))
+												$result_tree .="<input onchange='catchanged();' class='wk_elements' type='checkbox' name='category[]' value='".$_category['entity_id']."' checked></div>";
+											else
+												$result_tree .="<input onchange='catchanged();' class='wk_elements' type='checkbox' name='category[]' value='".$_category['entity_id']."'></div>";
+											echo $result_tree;
+										}
+									}					?>
+								</div>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Product Name")?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width" name="name" id="name" value="<?php echo $product->getName(); ?>"/>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Description") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<textarea name="description" class="required-entry " id="description" rows="5" cols="75" ><?php echo $product->getDescription(); ?></textarea>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Short description") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<textarea name="short_description" id="short_description" rows="5" cols="75" class="required-entry input-text"><?php echo $product->getShortDescription();?></textarea>
+							</div>
+						</div>						
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Price") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width validate-zero-or-greater" name="price" value="<?php  echo $product->getPrice(); ?>" />
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Stock") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width validate-digits" name="stock" value="<?php echo intVal($Stock); ?>"/>
+							</div>
+						</div>
+						<div class="wk_row">
+							<div class="wk_label">
+								<label><?php echo $helper->__("Weight") ?> :</label>
+								<span class="wk_require_star"></span>
+							</div>
+							<div class="wk_field">
+								<input type="text" class="required-entry wk_input_width validate-number validate-zero-or-greater validate-number-range number-range-0-99999999.9999" name="weight" value="<?php echo $product->getWeight();?>"/>
+							</div>
+						</div>						
+					</div>
+					<?php echo $this->getChildHtml(); ?>
+					<div class="wk_cp_save_product_button">
+						<p class="wk_back_link">
+							<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo; <?php echo $helper->__("Back") ?></a>
+						</p>
+						<center>
+							<button type="submit" id="save_butn" class="wk_button">
+								<span><?php echo $helper->__("Save") ?></span>
+							</button>
+						</center>
+					</div>
+				</form>
+				<script type="text/javascript">
+					var edit_form = new VarienForm("edit_form", true);
+					jQuery("#save_butn").click(function(){
+						var category_checked = false;
+						var extra_fields_validation = true;
+						jQuery(".wk_category").find("input").each(function(){
+							if(jQuery(this).prop("checked") == true)
+								category_checked = true;
+						});
+						jQuery("#description,#short_description").siblings(".nicEdit-wk_nice_textarea").find("div").removeClass("validation-failed");
+						jQuery("#description,#short_description").siblings(".nicEdit-wk_nice_textarea").next(".validation-advice").remove();
+						jQuery(".wk_for_validation").removeClass("validation-failed");
+						jQuery(".wk_for_validation").next(".validation-advice").remove();
+						if(jQuery("#description").prev().find("div").text() == ""){
+							jQuery("#description").prev().find("div").addClass("validation-failed");
+							jQuery("#description").prev().after("<div class='validation-advice'><?php echo $helper->__('This is a required field.'); ?></div>");
+							extra_fields_validation = false;
+						}
+						if(jQuery("#short_description").prev().find("div").text() == ""){
+							jQuery("#short_description").prev().find("div").addClass("validation-failed");
+							jQuery("#short_description").prev().after("<div class='validation-advice'><?php echo $helper->__('This is a required field.'); ?></div>");
+							extra_fields_validation = false;
+						}					
+						if(category_checked == false){
+							jQuery(".wk_for_validation").addClass("validation-failed");
+							jQuery(".wk_for_validation").after("<div class='validation-advice'><?php echo $helper->__('This is a required field.'); ?></div>");
+							extra_fields_validation = false;
+						}
+						if(edit_form.validator.validate() != false && extra_fields_validation != false)
+							jQuery("#save_butn").hide().after("<button disabled class='wk_button'><span><?php echo $helper->__('Saving'); ?>...</span></button>");
+						else
+							return false;
+					});
+					
+					jQuery("#wk_image").change(function(e) {
+						var ext = jQuery(this).val().split('.').pop().toLowerCase();
+						if(true != ["jpg","jpeg","png","gif"] && jQuery.inArray(ext,["jpg","jpeg","png","gif"]) != -1)    {
+							var file = this.files;
+							var xhr = new XMLHttpRequest();
+							if(xhr.upload) {
+								xhr.upload.onprogress = function(e) {
+									var done = e.position || e.loaded, total = e.totalSize || e.total;
+									var percentage = Math.floor(done/total*1000)/10;
+									console.log(percentage);
+									jQuery("#image_bar").css({"width":percentage+"%"});
+								};
+							}
+							xhr.open("POST","<?php echo $this->getUrl('customerpartner/customeraccount/fileupload');?>", true);
+							xhr.send(file);
+						}					
+					});
+					
+					
+					jQuery("#wk_image").ajaxfileupload({
+						"action" 	: "<?php echo $this->getUrl('customerpartner/customeraccount/fileupload');?>",
+						"onStart" 	: function(){jQuery("#image_bar").css({"width":"0%","animation":"2s linear 0s normal none infinite progress-bar-stripes"}).parent().show();
+						},
+						"onComplete": function(response){
+										jQuery("#image_bar").css({"width":"100%","animation":"none"});
+										if(typeof response.message != "undefined")
+											alert(response.message);
+										else{
+											
+											jQuery("#wk_image_hidden").val(response);
+											var img=jQuery("#wk_image_hidden").val();
+											var split_img=img.split(",");
+											for(i=0; i < split_img.length-1; i++){
+												jQuery("#wk_image_label").append("<input type='hidden' value='"+split_img[i]+"' name='image_upload[]' />");
+												jQuery(".cp_tbody_image").append("<tr class='preview'><td><img id='"+split_img[i]+"' class='wk_cp_add_images' src='<?php echo Mage::getBaseUrl("media")."customerpartner/customerproduct/".$customerid."/image/"; ?>"+split_img[i]+"' width='60px' height=50px'/></td><td><input type='radio' name='baseimage' value='"+split_img[i]+"' /></td><td><input type='radio' name='smallimage' value='"+split_img[i]+"'></td><td><input type='radio' name='thumbnailimage' value='"+split_img[i]+"'></td><td><img src='<?php echo $this->getSkinUrl("customerpartner/images/delete.gif"); ?>' class='wk_delegate_cp_delete' title='<?php echo $helper->__("Delete"); ?>'/></td></tr>");
+											}
+											jQuery("#cp_media_gallery").show();
+											jQuery("#wk_image").val("");
+											file_uploaded = 1;
+										}
+									  },
+						"valid_extensions" : ["jpg","jpeg","png","gif"],
+					});
+
+					jQuery("#cp_media_gallery").delegate(".wk_delegate_cp_delete","click",function(){
+						var dicisionapp = confirm("<?php echo $helper->__('Sure Want To Delete Image'); ?>");
+						var this_this = jQuery(this);
+						if(dicisionapp == true){
+							this_this.parents(".preview").find(".wk_cp_add_images");
+							this_this.attr("src","<?php echo $this->getJsUrl("extjs/resources/images/default/grid/loading.gif"); ?>");
+							var this_image = this_this.parents(".preview").find(".wk_cp_add_images");
+							jQuery.ajax({
+								url: "<?php echo $this->getUrl('customerpartner/customeraccount/deleteimagedelegate');?>",
+								type: "POST",
+								data: {file:this_image.attr("id")},
+								dataType: "html",
+								success:function(){
+									jQuery("#wk_image_label").find("input").each(function(){
+										if(jQuery(this).val() == this_image.attr("id"))
+											jQuery(this).remove();
+									});
+									this_this.parents(".preview").remove();
+								}
+							});
+						}						
+					});
+
+					jQuery("#cp_media_gallery").delegate(".wk_cp_add_images","mouseenter",function(){
+						if(((jQuery(this).position().left)+410) > jQuery(window).width())
+							jQuery("body").append("<div id='wk_cp_zoom_img' style='right:"+(jQuery(window).width()-(jQuery(this).position().left))+"px;top:"+((jQuery(this).position().top)-170)+"px;'><img src='"+jQuery(this).attr("src")+"' style='height:300px;width:300px;'/></div>");
+						else
+							jQuery("body").append("<div id='wk_cp_zoom_img' style='left:"+((jQuery(this).position().left)+70)+"px;top:"+((jQuery(this).position().top)-170)+"px;'><img src='"+jQuery(this).attr("src")+"' style='height:300px;width:300px;'/></div>");
+					});
+					
+					jQuery("#cp_media_gallery").delegate(".wk_cp_add_images","mouseout",function(){
+						jQuery("body").find("#wk_cp_zoom_img").remove();
+					});
+
+					jQuery(".wk_cp_delete").click(function(){
+						var dicisionapp = confirm("<?php echo $helper->__('Sure Want To Delete Image'); ?>");
+						if(dicisionapp == true){
+							var this_this = jQuery(this);
+							var this_image = this_this.parents(".preview").find(".wk_cp_add_images");
+							this_this.attr("src","<?php echo $this->getJsUrl("extjs/resources/images/default/grid/loading.gif"); ?>");
+							jQuery.ajax({
+								url: "<?php echo $this->getUrl('customerpartner/customeraccount/deleteimage');?>",
+								type: "POST",
+								data: {file:this_image.attr("id"),pid:this_image.attr("pid")},
+								dataType: "html",
+								success:function(){
+									this_this.parents(".preview").remove();
+								}
+							});
+						}		
+					});
+
+					bkLib.onDomLoaded(function(){
+						new nicEditor({fullPanel : true}).panelInstance("description");
+						new nicEditor({fullPanel : true}).panelInstance("short_description");     
+					});
+					function catchanged(){
+						jQuery("#wk_cp_cat_edited").val(1);
+					}
+					function findsubcat(thisthis){
+						var thisthis = jQuery(thisthis);		
+						if(thisthis.attr("class") == "wk_plus" || thisthis.attr("class") == "wk_plusend"){
+							thisthis.attr("onclick","");
+							thisthis.prepend("<span class='wk_node_loader'></span>")
+							jQuery.ajax({
+								url  : "<?php echo $this->getUrl('customerpartner/customeraccount/categorytree/');?>",
+								type : "POST",
+								data : {CID  :  thisthis.siblings("input").val(),
+										ML 	 :  thisthis.parent("div").css("margin-left").replace("px",""),
+										CATS : 	"<?php echo implode(',',$categories); ?>"},
+								dataType: "html",
+								success:function(content){
+									thisthis.attr("onclick","findsubcat(this)");
+									thisthis.find(".wk_node_loader").remove();
+									if(thisthis.attr("class") == "wk_plus")
+										thisthis.attr("class","wk_minus");
+									if(thisthis.attr("class") == "wk_plusend")
+										thisthis.attr("class","wk_minusend");
+									thisthis.parent("div").after(content);
+									thisthis.parent("div").nextAll().slideDown(300);
+								}
+							});			
+						}
+						if(thisthis.attr("class") == "wk_minus" || thisthis.attr("class") == "wk_minusend"){
+							if(thisthis.attr("class") == "wk_minus")
+								thisthis.attr("class","wk_plus");
+							if(thisthis.attr("class") == "wk_minusend")
+								thisthis.attr("class","wk_plusend");
+							var thiscategory = thisthis.parent("div");
+							while(thiscategory.next().hasClass("wk_removable")){
+								thiscategory.next().slideUp("slow",function(){jQuery(this).remove();});
+								thiscategory = thiscategory.next();
+							}
+						}
+					}
+				</script>
+<?php 		}
+			else{
+				Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getBaseUrl()."customerpartner/customeraccount/productslist/");
+		    	Mage::getSingleton("core/session")->addError($helper->__("Sorry! you are not authorized to edit this product"));
+			}
+		}
+ 		else{
+			Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getBaseUrl()."customer/account/edit/");
+		    Mage::getSingleton("core/session")->addNotice($helper->__("To edit product please request for become partner with us"));
+		}

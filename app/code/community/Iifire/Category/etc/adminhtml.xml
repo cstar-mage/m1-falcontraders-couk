@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+         <catalog>
+            <children>
+                <iifire_category translate="title" module="icategory">
+                    <title>Iifire Category Management</title>
+                    <action>adminhtml/iifire_category/index</action>
+                    <sort_order>100</sort_order>
+                </iifire_category>
+            </children>
+         </catalog>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <catalog>
+                        <children>
+                            <iifire_category translate="title" module="icategory">
+                                <title>Iifire Category Management</title>
+                                <sort_order>100</sort_order>
+                            </iifire_category>
+                        </children>
+                    </catalog>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

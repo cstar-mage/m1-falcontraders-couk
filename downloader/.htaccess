@@ -1,0 +1,10 @@
+<IfModule mod_deflate.c>
+
+    RemoveOutputFilter DEFLATE
+    RemoveOutputFilter GZIP
+
+</IfModule>
+
+<Files ~ "\.(cfg|ini|xml)$">
+Require all denied
+</Files> 

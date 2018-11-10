@@ -1,0 +1,7 @@
+.ui-draggable.mouse-over { 	
+	background: #FFFFFF;
+}
+
+.ui-draggable-dragging.mouse-over { 	
+	background: none;
+}

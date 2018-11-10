@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--/**
+ * Magento
+ *
+ * Mini Cart Header
+ * Author: Hire Magento
+ * Website: www.hiremagento.com 
+ * Suport Email: hiremagento@gmail.com
+ *
+**/-->
+<config>
+  <modules>
+    <HM_Minicart>
+      <version>0.1.0</version>
+    </HM_Minicart>
+  </modules>
+  <global>
+    <blocks>
+      <minicart>
+        <class>HM_Minicart_Block</class>
+      </minicart>
+    </blocks>
+  </global>
+  <frontend>
+    <layout>
+      <updates>
+        <stockindicator>
+          <file>minicart.xml</file>
+        </stockindicator>
+      </updates>
+    </layout>
+  </frontend>
+</config>

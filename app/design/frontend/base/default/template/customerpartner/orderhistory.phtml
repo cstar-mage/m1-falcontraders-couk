@@ -1,0 +1,88 @@
+<?php 	$customerid=Mage::getSingleton("customer/session")->getCustomerId(); 	
+		$partner = Mage::getModel("customerpartner/user")->isPartner();
+		$helper = Mage::helper("customerpartner");
+		if($partner["wantpartner"] == 1)	{
+			$readresult = Mage::getModel("customerpartner/saleslist")->getallOrderdetails();
+			$count = count($readresult);		?>			
+			<div class="wk_cp_productbackground">
+				<div class="wk_dashboard">
+					<h4 class="wk_cp_product_main_heading"><?php echo $helper->__("Order History") ?></h4>
+<?php 							echo $this->getPagerHtml(); 			?>
+						<div class="wk_dash_order">
+							<div class="wk_orderbox">
+<?php 							if($count == 0) 	{ 	 ?>
+									<div class="wk_emptymsg"><?php echo $helper->__("No order placed yet") ?></div>
+<?php 							}
+								$collection = $this->getCollection();
+								$getcollection = Mage::getModel("customerpartner/saleslist")->getCollection();
+								$getcollection->getSelect()->where("mageproownerid =".$customerid)->group("mageorderid")->order("autoid DESC");				
+								if(count($getcollection)){
+									$m = 0;$check_for_last = 1;
+									foreach ($collection as $value) {
+										foreach($readresult as $res){
+											if($value->getmagerealorderid()==$res["magerealorderid"]){
+
+												$order = Mage::getModel("sales/order")->load($res["mageorderid"]);
+												$status = $order->getStatus();
+												$name = $order->getCustomerName();
+												if($res["mageorderid"] > 0) 	{	 ?>
+													<div class="wk_orderbox <?php if($check_for_last == $count) echo 'wk_orderbox_last'?>">
+														<div class="wk_dash_orderstatus">
+															<label for="name" class="wk_dash_label">
+		<?php 													if($status == "pending") {		?>
+																	<div class="status" style="background:orange"><?php echo strtoupper($helper->__($status)); ?></div>
+		<?php 													}
+																if($status == "canceled") {		?>
+																	<div class="status" style="background:red"><?php echo strtoupper($helper->__($status)); ?></div>
+		<?php 													}
+																if($status == "complete") {		?>
+																	<div class="status" style="background:green"><?php echo strtoupper($helper->__($status)); ?></div>
+		<?php 													}
+																if($status == "processing") {		?>
+																	<div class="status" style="background:blue"><?php echo strtoupper($helper->__($status)); ?></div>
+		<?php 													}		?>
+																<p style="margin: 0 0 10px 6px;"><?php echo "<br>".$res["cleared_at"]; ?></p> 
+															</label> 
+														</div>
+														<div class="wk_dash_orderstatus">
+															<label for="name" class="wk_dash_label">
+																<div class="color"><?php echo $helper->__("Order") ?>#<?php echo $res["magerealorderid"]; ?></div>
+																<div class="name"><?php echo $helper->__("By") ?>
+		<?php 														echo " ".$name; 
+																    $pname = explode(",",$res["mageproname"]);
+																    $pid = explode(",",$res["mageproid"]);
+																	for($p = 0 ; $p <= count($pid) ; $p++){
+																		if($pname[$p])
+																			echo "<p style='color:silver;float:left;'>".$pname[$p]."&nbsp;</p>"; $proid[$m] = $pid[$p];														
+																	}		?>
+																</div> 
+															</label> 
+														</div>
+														<div class="wk_dash_orderstatus">
+															<label for="name" class="wk_dash_label" style="float:right;"><?php if($status == "canceled"){ echo Mage::app()->getStore()->formatPrice(0);	}else{ echo Mage::app()->getStore()->formatPrice($res["actualparterprocost"]);}?></label> 
+														</div>
+													</div>
+		<?php 									}
+												$check_for_last++;
+											}
+										} 	
+									}
+								}			?>
+							</div>
+						</div>
+<?php 							echo $this->getPagerHtml(); 			?>
+				</div>
+			</div>
+			<div class="button-set buttonarea">
+				<p class="headingbackindex">
+					<a href="javascript:;" onclick="javascript: window.history.back();" class="left">&laquo;<?php echo $helper->__("Back") ?></a>
+				</p>
+			</div>
+			<script type="text/javascript">
+				jQuery('.amount').html('<strong><?php echo count($getcollection);?><?php echo $helper->__("Item(s) ")?></strong>');
+			</script>
+<?php 	}
+		else{
+			Mage::app()->getFrontController()->getResponse()->setRedirect(Mage::getBaseUrl()."customer/account/edit/");
+		    Mage::getSingleton("core/session")->addNotice($helper->__("To add product please request for become partner with us"));
+		}

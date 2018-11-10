@@ -1,0 +1,292 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Webkul_CustomerPartner>
+            <version>2.0.0</version>
+        </Webkul_CustomerPartner>
+    </modules>
+	<default>
+		<customerpartner>
+			<customerpartner_options>
+                <commission_percent><![CDATA[0]]></commission_percent>
+                <partner_approval><![CDATA[1]]></partner_approval>
+                <product_approval><![CDATA[1]]></product_approval>
+            </customerpartner_options>
+		</customerpartner>
+	</default>
+    <frontend>
+        <routers>
+            <customerpartner>
+                <use>standard</use>
+                <args>
+                    <module>Webkul_CustomerPartner</module>
+                    <frontName>customerpartner</frontName>
+                </args>
+            </customerpartner>
+        </routers>
+        <layout>
+            <updates>
+                <customerpartner>
+                    <file>customerpartner.xml</file>
+                </customerpartner>
+            </updates>
+        </layout>
+		<translate>
+			<modules>
+				<Webkul_CustomerPartner>
+					<files>
+						<customerpartner>customerpartner.csv</customerpartner>
+					</files>
+				</Webkul_CustomerPartner>
+			</modules>
+		</translate>
+    </frontend>
+    <admin>
+        <routers>
+			<customerpartner>
+				<use>admin</use>
+				<args>
+					<module>Webkul_CustomerPartner</module>
+					<frontName>customerpartner</frontName>
+				</args>
+			</customerpartner>
+        </routers>
+    </admin>
+    <adminhtml>
+        <menu>
+            <customerpartner module="customerpartner">
+                <title>Customer Partner</title>
+                <sort_order>60</sort_order> 
+                <children>
+                    <customerpartner_products translate="title">
+                        <title>Manage Products</title>
+                        <action>customerpartner/adminhtml_products</action>
+                    </customerpartner_products>
+                </children>
+                <children>
+                    <customerpartner_partners translate="title">
+                        <title>Manage Partners</title>
+                        <action>customerpartner/adminhtml_partners</action>
+                    </customerpartner_partners>
+                </children>
+                <children>
+                    <customerpartner_commision translate="title">
+                        <title>Manage Commision</title>
+                        <action>customerpartner/adminhtml_commisions</action>
+                    </customerpartner_commision>
+                </children>
+                <children>
+                    <customerpartner_configuration translate="title">
+                        <title>Configuration</title>
+                        <action>adminhtml/system_config/edit/section/customerpartner</action>
+                    </customerpartner_configuration>
+                </children>
+            </customerpartner>
+        </menu>
+		<acl>
+            <resources>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <customerpartner module="customerpartner">
+                                            <title>Customer Partner</title>
+                                        </customerpartner>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                        <customerpartner module="customerpartner">
+                            <title>Customer Partner</title>
+                            <children>
+                                <customerpartner_products translate="title">
+                                    <title>Manage Products</title>
+                                    <action>customerpartner/adminhtml_products</action>
+                                </customerpartner_products>
+                            </children>
+                            <children>
+                                <customerpartner_partners translate="title">
+                                    <title>Manage Partners</title>
+                                    <action>customerpartner/adminhtml_partners</action>
+                                </customerpartner_partners>
+                            </children>
+                            <children>
+                                <customerpartner_commision translate="title">
+                                    <title>Manage Commision</title>
+                                    <action>customerpartner/adminhtml_commisions</action>
+                                </customerpartner_commision>
+                            </children>
+                        </customerpartner>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+		<layout>
+			<updates>
+				<customerpartner>
+					<file>customerpartner.xml</file>
+				</customerpartner>
+			</updates>
+		</layout>
+        <translate>
+            <modules>
+                <Webkul_CustomerPartner>
+                    <files>
+                        <customerpartner>customerpartner.csv</customerpartner>
+                    </files>
+                </Webkul_CustomerPartner>
+            </modules>
+        </translate>
+    </adminhtml>
+    <global>
+		<events>
+			<catalog_product_delete_after>
+                <observers>
+                   <Webkul_CustomerPartner_Model_Event_Observer>
+                      <type>singleton</type>
+                      <class>Webkul_CustomerPartner_Model_Event_Observer</class>
+                      <method>DeleteProduct</method>
+                   </Webkul_CustomerPartner_Model_Event_Observer>
+               </observers>
+            </catalog_product_delete_after>
+			<customer_register_success>
+				<observers>
+                   <Webkul_CustomerPartner_Model_Event_Observer>
+                      <type>singleton</type>
+						<class>Webkul_CustomerPartner_Model_Event_Observer</class>
+						<method>CustomerRegister</method>
+                   </Webkul_CustomerPartner_Model_Event_Observer>
+               </observers>
+			</customer_register_success>
+			<checkout_onepage_controller_success_action>
+				<observers>
+                   <Webkul_CustomerPartner_Model_Event_Observer>
+                      <type>singleton</type>
+						<class>Webkul_CustomerPartner_Model_Event_Observer</class>
+						<method>afterPlaceOrder</method>
+                   </Webkul_CustomerPartner_Model_Event_Observer>
+               </observers>
+			</checkout_onepage_controller_success_action>
+			<sales_order_invoice_save_after>
+				<observers>
+					<Webkul_CustomerPartner_Model_Event_Observer>
+						<class>Webkul_CustomerPartner_Model_Event_Observer</class>
+						<method>checkInvoiceSubmit</method>
+					</Webkul_CustomerPartner_Model_Event_Observer>
+				</observers>
+			</sales_order_invoice_save_after>
+            <order_cancel_after>
+                <observers>
+                    <Webkul_CustomerPartner_Model_Event_Observer>
+                        <class>Webkul_CustomerPartner_Model_Event_Observer</class>
+                        <method>cancelorder</method>
+                    </Webkul_CustomerPartner_Model_Event_Observer>
+                </observers>
+            </order_cancel_after>
+		</events>
+		<template>
+			<email>
+				<partnerrequest>
+                    <label>Partner Request</label>
+                    <file>customerpartner/partnerrequest.html</file>
+                    <type>html</type>
+                </partnerrequest>
+                <partnerapprove>
+                    <label>Partner Subscribe</label>
+                    <file>customerpartner/partnersubscribe.html</file>
+                    <type>html</type>
+                </partnerapprove>
+                <askquestion>
+                    <label>Ask Question to Admin</label>
+                    <file>customerpartner/askquestion.html</file>
+                    <type>html</type>
+                </askquestion>
+                <partnerdisapprove>
+                    <label>Partner Unsubscribe</label>
+                    <file>customerpartner/partnerunsubscribe.html</file>
+                    <type>html</type>
+                </partnerdisapprove>				
+				<whenproductapproved>
+					<label>When the product is Approved mail send to seller</label>
+					<file>customerpartner/admininapprovedit.html</file>
+					<type>html</type>
+				</whenproductapproved>
+				<productaddmail>
+					<label>When the product is added mail send to admin</label>
+					<file>customerpartner/productaddmailtoadmin.html</file>
+					<type>html</type>
+				</productaddmail>
+				<producteditmail>
+					<label>When the product is edited mail send to admin</label>
+					<file>customerpartner/producteditmailtoadmin.html</file>
+					<type>html</type>
+				</producteditmail>
+				<productdeletemail>
+					<label>When the product is deleted mail send to seller</label>
+					<file>customerpartner/productdeletemail.html</file>
+					<type>html</type>
+				</productdeletemail>
+				<orderinvoice>
+					<label>When invoice is created for an order</label>
+					<file>customerpartner/partener_order_invoice.html</file>
+					<type>html</type>
+				</orderinvoice>
+			</email>
+		</template>
+        <models>
+            <customerpartner>
+                <class>Webkul_CustomerPartner_Model</class>
+                <resourceModel>customerpartner_mysql4</resourceModel>
+            </customerpartner>
+            <customerpartner_mysql4>
+                <class>Webkul_CustomerPartner_Model_Mysql4</class>
+                <entities>
+                    <product>
+                        <table>customerpartner_product</table>
+                    </product>
+					<user>
+						<table>customerpartner_userdata</table>
+					</user>
+					<saleperpartner>
+						<table>customerpartner_saleperpartner</table>
+					</saleperpartner>
+					<saleslist>
+						<table>customerpartner_saleslist</table>
+					</saleslist>
+                </entities>
+            </customerpartner_mysql4>
+        </models>
+        <resources>
+            <customerpartner_setup>
+                <setup>
+                    <module>Webkul_CustomerPartner</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </customerpartner_setup>
+            <customerpartner_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </customerpartner_write>
+            <customerpartner_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </customerpartner_read>
+        </resources>
+        <blocks>
+            <customerpartner>
+                <class>Webkul_CustomerPartner_Block</class>
+            </customerpartner>
+        </blocks>
+        <helpers>
+            <customerpartner>
+                <class>Webkul_CustomerPartner_Helper</class>
+            </customerpartner>
+        </helpers>
+    </global>
+</config>

@@ -1,0 +1,53 @@
+<?php
+	$customer_id = Mage::getSingleton("customer/session")->getCustomerId();
+	$paymentDetail = Mage::getModel("customerpartner/saleslist")->getPaymentDetailById(); 
+	$helper = Mage::helper("customerpartner");
+	$partner = Mage::getModel("customerpartner/user")->isPartner();			?>
+	<form action="<?php echo $this->getUrl('customerpartner/customeraccount/extra') ?>" method="post" id="form-payment-validate">
+		<input type="hidden" name="userid" id="userid" value="<?php echo $customer_id; ?>" title="userid" class="input-text"/>
+		<div class="fieldset">
+			<h4 class="legend"><?php echo $helper->__("Extra Details") ?></h4>
+			<ul class="form-list">
+<?php 		if(count($partner) == 0 || $partner["wantpartner"] == 0) {				?>				
+				<li class="fields">
+					<div class="field">
+                        <label for="want_to_partner" class="required"><em>*</em><?php echo $helper->__("Want to be Partner with us"); ?></label>
+                        <div class="input-box">
+                            <select name="wanttopartner" class="required-entry">
+                                <option value="1" <?php if($partner["wantpartner"] == 1) echo "selected"; ?>>Yes</option>
+                                <option value="0" <?php if($partner["wantpartner"] == 0) echo "selected"; ?>>No</option>
+                            </select>
+                        </div>
+                    </div>
+				</li>
+<?php 		}
+ 			if($partner["wantpartner"] == 2 && count($partner)){		?>
+ 				<li class="fields">
+					<div class="field">
+                        <label for="want_to_partner" class="required"><em>*</em><?php echo $helper->__("Want to be Partner with us"); ?></label>
+                        <div class="input-box">
+                            <span><?php echo $helper->__("Pending"); ?></span>
+                        </div>
+                    </div>
+				</li>
+<?php		}
+			if(count($partner) > 0 && $partner["wantpartner"]==1 )	{				?>
+				<li class="fields">
+					<div class="field">
+						<label><?php echo $helper->__("Payment Details") ?></label>
+						<div class="input-box">
+							<textarea name="paymentsource" id="paymentsource" title="payment source" cols="1" rows="3" ><?php echo $paymentDetail; ?></textarea>							
+						</div>
+					</div>
+				</li>
+<?php 		}		?>
+			</ul>
+		</div>
+		<div class="buttons-set">
+			<button type="submit" title="Save" class="button pay">
+				<span>
+					<span><?php echo $helper->__("Save") ?></span>
+				</span>
+			</button>
+		</div>
+	</form>

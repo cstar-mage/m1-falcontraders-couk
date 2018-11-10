@@ -1,0 +1,11 @@
+<?php
+		$cekAktif = Mage::getStoreConfig('gtransec/gtransgroup/enable');
+		
+		if($cekAktif):
+?>
+<div class="form-language">
+<label for="select-language"><?php echo $this->__('Translate This Page:') ?></label>
+<?php echo Mage::getStoreConfig('gtransec/gtransgroup/snippet');?>
+</div>
+
+<?php endif;?>

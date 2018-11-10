@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Iifire_Category>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Iifire_Category>
+    </modules>
+</config>

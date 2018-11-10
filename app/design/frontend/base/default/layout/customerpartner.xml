@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+	<customerpartner_index_index>
+        <reference name="root">
+			<action method="setTemplate">
+                <template>page/1column.phtml</template>
+            </action>
+		</reference>
+    </customerpartner_index_index>
+    <customer_account_create>
+        <reference name="content">
+            <block type="core/template" name="customer_conf" template="customerpartner/confpartner.phtml"/>
+        </reference>
+    </customer_account_create>
+    <customer_account_edit>
+        <reference name="content">
+            <block type="core/template" name="extra.details" template="customerpartner/customer/account/edit/extra_details.phtml" after="my.account.wrapper"/>
+        </reference>
+    </customer_account_edit>
+	<customer_account>
+		<reference name="left">
+            <block type="core/template" name="cp_navigation" template="customerpartner/customer/account/cpnavigation.phtml" before="-"/>
+        </reference>
+	</customer_account>	
+	<customerpartner_customeraccount_newproduct>
+		<reference name="head">
+            <block type="core/text" name="google.cdn.jquery">
+                <action method="setText">
+                    <text>
+                        <![CDATA[<script type="text/javascript">if (typeof jQuery == 'undefined'){document.write(unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));}</script><script type="text/javascript">jQuery.noConflict();</script>]]>
+                    </text>              
+                </action>
+            </block>
+			<action method="addCss">
+                <stylesheet>customerpartner/css/style.css</stylesheet>
+            </action>				
+		</reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="core/template" name="cp_newproduct" template="customerpartner/newproduct.phtml">
+                <block type="core/template" name="cp_newproduct_image" template="customerpartner/new_pro_image.phtml"/>
+            </block>
+        </reference>
+    </customerpartner_customeraccount_newproduct>
+	<customerpartner_customeraccount_productlist>
+		<reference name="head">
+            <block type="core/text" name="google.cdn.jquery">
+                <action method="setText">
+                    <text>
+                        <![CDATA[<script type="text/javascript">if (typeof jQuery == 'undefined'){document.write(unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));}</script><script type="text/javascript">jQuery.noConflict();</script>]]>
+                    </text>              
+                </action>
+            </block>
+			<action method="addCss">
+                <stylesheet>customerpartner/css/style.css</stylesheet>
+            </action>				
+		</reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="customerpartner/customerpartner" name="cp_productslist" template="customerpartner/productlist.phtml"/>
+        </reference>
+    </customerpartner_customeraccount_productlist>
+	<customerpartner_customeraccount_editproduct>
+		<reference name="head">
+            <block type="core/text" name="google.cdn.jquery">
+                <action method="setText">
+                    <text>
+                        <![CDATA[<script type="text/javascript">if (typeof jQuery == 'undefined'){document.write(unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));}</script><script type="text/javascript">jQuery.noConflict();</script>]]>
+                    </text>              
+                </action>
+            </block>
+			<action method="addCss">
+                <stylesheet>customerpartner/css/style.css</stylesheet>
+            </action>				
+		</reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="customerpartner/editproduct" name="cp_editproduct" template="customerpartner/editproduct.phtml">
+                <block type="customerpartner/editproduct" name="cp_editproduct_image" template="customerpartner/edit_pro_image.phtml"/>
+            </block>
+        </reference>
+    </customerpartner_customeraccount_editproduct>
+	<customerpartner_customeraccount_dashboard>
+		<reference name="head">
+            <block type="core/text" name="google.cdn.jquery">
+                <action method="setText">
+                    <text>
+                        <![CDATA[<script type="text/javascript">if (typeof jQuery == 'undefined'){document.write(unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));}</script><script type="text/javascript">jQuery.noConflict();</script>]]>
+                    </text>              
+                </action>
+            </block>
+			<action method="addCss">
+                <stylesheet>customerpartner/css/style.css</stylesheet>
+            </action>					
+		</reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="core/template" name="cp_dashboard" template="customerpartner/dashboard.phtml"/>
+        </reference>
+    </customerpartner_customeraccount_dashboard>
+	<customerpartner_customeraccount_orderhistory>
+		<reference name="head">
+            <block type="core/text" name="google.cdn.jquery">
+                <action method="setText">
+                    <text>
+                        <![CDATA[<script type="text/javascript">if (typeof jQuery == 'undefined'){document.write(unescape("%3Cscript src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js' type='text/javascript'%3E%3C/script%3E"));}</script><script type="text/javascript">jQuery.noConflict();</script>]]>
+                    </text>              
+                </action>
+            </block>
+			<action method="addCss">
+                <stylesheet>customerpartner/css/style.css</stylesheet>
+            </action>				
+		</reference>
+        <update handle="customer_account"/>
+        <reference name="content">
+            <block type="customerpartner/orders" name="cp_orderhistory" template="customerpartner/orderhistory.phtml"/>
+        </reference>
+    </customerpartner_customeraccount_orderhistory>
+</layout> 

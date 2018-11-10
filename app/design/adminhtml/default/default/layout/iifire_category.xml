@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout>
+    <adminhtml_iifire_category_index>
+    	<reference name="content">
+            <block type="iifire_category/adminhtml_categories" name="iifire.categories" template="iifire/category/categories.phtml"/>
+        </reference>
+        <reference name="left">
+            <block name="category.tree" type="iifire_category/adminhtml_tree" template="iifire/category/tree.phtml" />
+        </reference>
+        
+    </adminhtml_iifire_category_index>
+    <adminhtml_iifire_category_edit>
+        <reference name="content">
+            <block type="iifire_category/adminhtml_categories" name="iifire.categories" template="iifire/category/categories.phtml"/>
+        </reference>
+    </adminhtml_iifire_category_edit>
+</layout>

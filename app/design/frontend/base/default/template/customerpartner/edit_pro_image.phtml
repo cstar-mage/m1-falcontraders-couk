@@ -1,0 +1,45 @@
+<?php 	$product = $this->getProduct();
+		$helper = Mage::helper("customerpartner"); ?>
+<div class="wk_row">
+	<div class="wk_label">
+		<label><?php echo $helper->__("Image") ?>:</label>
+	</div>
+	<div class="wk_field">
+		<label for="wk_image" id="wk_image_label">
+			<i></i>
+			<span><?php echo $helper->__("Add images") ?>...</span>
+		</label>
+		<input id="wk_image" type="file" name="images[]" accept="image/*" style="display:none;" multiple="multiple"/>
+		<input id="wk_image_hidden" type="hidden" name="wk_image_hidden" value="">
+		<div class="progress progress-striped active" style="display:none;">
+			<div id="image_bar" class="bar" style="width:0%;"></div>
+		</div>
+		<table id="cp_media_gallery" class="data border" width="100%" cellspacing="0">
+			<thead>
+				<tr id="wk_cp_tr_heading">
+					<th><?php echo $helper->__("Image") ?></th>
+					<th><?php echo $helper->__("Base Image") ?></th>
+					<th><?php echo $helper->__("Small Image") ?></th>
+					<th><?php echo $helper->__("Thumbnail") ?></th>
+					<th><?php echo $helper->__("Action") ?></th>
+				</tr>
+			</thead>
+			<tbody class="cp_tbody_image">
+<?php 	$gallery = $product->getMediaGalleryImages();
+			if($gallery) {  	
+				$i = 0;
+				foreach($gallery as $_image) { 
+				  	$i++; 		  ?>
+					<tr class="preview">
+						<td><img id="<?php echo $_image->getFile(); ?>"  class="wk_cp_add_images" pid="<?php echo $product->getId(); ?>" src="<?php echo $this->helper("catalog/image")->init($gallery, "image",$_image->getFile()); ?>" alt="<?php echo $this->htmlEscape($_image->getLabel());?>" title="<?php echo $this->htmlEscape($_image->getLabel()); ?>" width="60px" height="50px" /></td>
+						<td><input type="radio" name="baseimage" value="<?php echo $_image->getFile(); ?>" <?php echo ($_image->getFile() == $product->getImage())?"checked":"" ?>/></td>
+						<td><input type="radio" name="smallimage" value="<?php echo $_image->getFile(); ?>" <?php echo ($_image->getFile() == $product->getSmallImage())?"checked":"" ?>></td>
+						<td><input type="radio" name="thumbnailimage" value="<?php echo $_image->getFile(); ?>" <?php echo ($_image->getFile() == $product->getThumbnail())?"checked":"" ?>></td>
+						<td><img src="<?php echo $this->getSkinUrl("customerpartner/images/delete.gif"); ?>" class="wk_cp_delete" title="<?php echo $helper->__('Delete'); ?>"/></td>
+					</tr>
+<?php			}
+		    } 		?>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+	<customerpartner_adminhtml_partners_index>
+        <reference name="content">
+            <block type="customerpartner/adminhtml_partners" name="cp_partners"/>
+        </reference>
+    </customerpartner_adminhtml_partners_index>
+
+	<customerpartner_adminhtml_order_index>
+        <reference name="content">
+            <block type="customerpartner/adminhtml_order" name="cp_order"/>
+        </reference>
+    </customerpartner_adminhtml_order_index>
+
+	<customerpartner_adminhtml_products_index>
+        <reference name="content">
+            <block type="adminhtml/store_switcher" name="store_switcher" as="store_switcher">
+                <action method="setUseConfirm"><params>0</params></action>
+            </block>
+            <block type="customerpartner/adminhtml_products" name="cp_products"/>
+			<block type="core/template" template="customerpartner/previewpro.phtml"/>
+        </reference>
+    </customerpartner_adminhtml_products_index>
+
+	<customerpartner_adminhtml_commisions_index>
+        <reference name="content">
+            <block type="customerpartner/adminhtml_commisions" name="commisions"/>
+        </reference>
+    </customerpartner_adminhtml_commisions_index>
+    
+	<adminhtml_sales_order_view> 
+		<reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_order_view_items_renderer_default</block><template>sales/order/view/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_view>
+	<adminhtml_sales_order_invoice_new>
+		<reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/invoice/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_invoice_new>
+	 <adminhtml_sales_order_shipment_new>
+		<reference name="order_items">
+           <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/shipment/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_shipment_new>
+	<adminhtml_sales_order_shipment_view>
+		 <reference name="shipment_items">
+           <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/shipment/view/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_shipment_view>
+	 <adminhtml_sales_order_invoice_updateqty>
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/invoice/create/items/renderer/default.phtml</template></action>
+           <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_invoice_updateqty>
+	<adminhtml_sales_order_invoice_view>
+        <reference name="invoice_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/invoice/view/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_invoice_view>
+	<adminhtml_sales_order_creditmemo_new>
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/creditmemo/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_new>
+    <adminhtml_sales_order_creditmemo_updateqty>
+        <reference name="order_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/creditmemo/create/items/renderer/default.phtml</template></action>
+            <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_updateqty>
+    <adminhtml_sales_order_creditmemo_view>
+        <reference name="creditmemo_items">
+            <action method="addItemRender"><type>default</type><block>adminhtml/sales_items_renderer_default</block><template>sales/order/creditmemo/view/items/renderer/default.phtml</template></action>
+             <action method="addColumnRender"><column>name</column><block>adminhtml/sales_items_column_name</block><template>customerpartner/sales/items/column/name.phtml</template></action>
+        </reference>
+    </adminhtml_sales_order_creditmemo_view>
+</layout>
