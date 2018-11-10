@@ -6,5 +6,6 @@
 </IfModule>
 
 <Files ~ "\.(cfg|ini|xml)$">
-Require all denied
+    order allow,deny
+    deny from all
 </Files> 

@@ -6079,13 +6079,4 @@ Object.extend(Element.ClassNames.prototype, Enumerable);
       return Prototype.Selector.select(selector, element || document);
     }
   });
-
 })();
-
-
-
-
-
-
-
-

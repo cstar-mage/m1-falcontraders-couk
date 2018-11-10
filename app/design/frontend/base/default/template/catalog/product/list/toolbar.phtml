@@ -31,7 +31,6 @@
  * @see Mage_Catalog_Block_Product_List_Toolbar
  */
 ?>
-<script>jQuery.noConflict();</script>
 <?php if($this->getCollection()->getSize()): ?>
 <div class="toolbar">
     <div class="pager">
@@ -45,7 +44,7 @@
 
         <div class="limiter">
             <label><?php echo $this->__('Show') ?></label>
-          <select name="sid"  onchange="setLocation(this.value);">
+            <select onchange="setLocation(this.value)">
             <?php foreach ($this->getAvailableLimit() as  $_key=>$_limit): ?>
                 <option value="<?php echo $this->getLimitUrl($_key) ?>"<?php if($this->isLimitCurrent($_key)): ?> selected="selected"<?php endif ?>>
                     <?php echo $_limit ?>
